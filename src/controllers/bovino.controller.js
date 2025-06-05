@@ -38,10 +38,9 @@ exports.getAllBovinos = async (req, res) => {
         { model: HistorialReproduccion, as: 'historialReproductivo' }
       ],
     });
-    res.status(200).json(bovinos);  
-  } 
-  catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(200).json(bovinos); 
+  } catch (error) {
+    res.status(500).json({ message: error.message }); 
   }
 };
 
@@ -53,10 +52,9 @@ exports.createBovino = async (req, res) => {
     }
 
     const newBovino = await Bovino.create(req.body);
-    res.status(201).json(newBovino);
-  } 
-  catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(201).json(newBovino); 
+  } catch (error) {
+    res.status(400).json({ message: error.message }); 
   }
 };
 
@@ -73,11 +71,11 @@ exports.getBovinoById = async (req, res) => {
       ],
     });
     if (!bovino) {
-      return res.status(404).json({ message: 'Bovino no encontrado' });
+      return res.status(404).json({ message: 'Bovino no encontrado' }); 
     }
-    res.status(200).json(bovino);
+    res.status(200).json(bovino); 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message }); 
   }
 };
 
@@ -95,9 +93,9 @@ exports.updateBovino = async (req, res) => {
         { model: User, as: 'propietario', attributes: { exclude: ['password'] } },
       ],
     });
-    res.status(200).json(updatedBovino);
+    res.status(200).json(updatedBovino); 
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message: error.message }); 
   }
 };
 
@@ -107,11 +105,10 @@ exports.deleteBovino = async (req, res) => {
       where: { id: req.params.id },
     });
     if (deletedRows === 0) {
-      return res.status(404).json({ message: 'Bovino no encontrado' });
+      return res.status(404).json({ message: 'Bovino no encontrado' }); 
     }
-    res.status(204).send();
-  } 
-  catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(204).send(); 
+  } catch (error) {
+    res.status(500).json({ message: error.message }); 
   }
 };
