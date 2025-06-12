@@ -24,7 +24,7 @@ exports.getAllBovinos = async (req, res) => {
       whereClause.precio = { [Op.lte]: parseInt(precioMax) };
     }
     if (ubicacion) {
-      whereClause.ubicacion = { [Op.like]: '%${ubicacion}%' };
+      whereClause.ubicacion = { [Op.like]: `%${ubicacion}%` };
     }
 
     const bovinos = await Bovino.findAll({
@@ -32,14 +32,15 @@ exports.getAllBovinos = async (req, res) => {
       include: [
         { model: Raza, as: 'raza' },
         { model: User, as: 'propietario', attributes: { exclude: ['password'] } },
-        { model: ValorCaracteristica, as: 'caracteristicasGeneticas',
-          include: { model: CaracteristicaGenetica }
+        { model: ValorCaracteristica, as: 'valoresDeCaracteristicas',
+          include: { model: CaracteristicaGenetica, as: 'caracteristicaAsociada' }
         },
         { model: HistorialReproduccion, as: 'historialReproductivo' }
       ],
     });
     res.status(200).json(bovinos); 
   } catch (error) {
+    console.error("Error al obtener bovinos (backend):", error);
     res.status(500).json({ message: error.message }); 
   }
 };
@@ -64,10 +65,10 @@ exports.getBovinoById = async (req, res) => {
       include: [
         { model: Raza, as: 'raza' },
         { model: User, as: 'propietario', attributes: { exclude: ['password'] } },
-        { model: ValorCaracteristica, as: 'caracteristicasGeneticas',
+        { model: ValorCaracteristica, as: 'valoresDeCaracteristicas',
           include: { model: CaracteristicaGenetica }
         },
-        { model: HistorialReproduccion, as: 'historialReproductivo' }
+        { model: HistorialReproduccion, as: 'historialReproductivo', as: 'caracteristicaAsociada' }
       ],
     });
     if (!bovino) {
@@ -75,6 +76,7 @@ exports.getBovinoById = async (req, res) => {
     }
     res.status(200).json(bovino); 
   } catch (error) {
+    console.error("Error al obtener bovino por ID (backend):", error.message);
     res.status(500).json({ message: error.message }); 
   }
 };
@@ -83,6 +85,7 @@ exports.updateBovino = async (req, res) => {
   try {
     const [updatedRows] = await Bovino.update(req.body, {
       where: { id: req.params.id },
+      individualHooks: true
     });
     if (updatedRows === 0) {
       return res.status(404).json({ message: 'Bovino no encontrado o sin cambios' }); 
