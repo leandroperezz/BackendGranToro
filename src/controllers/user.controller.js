@@ -24,9 +24,9 @@ exports.getAllUsers = async (req, res) => {
 exports.createUser = async (req, res) => {
   try {
     
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Nombre, email y contraseña son requeridos.' }); // 
+    const { name, email, password, telefono } = req.body;
+    if (!name || !email || !password || !telefono) {
+      return res.status(400).json({ message: 'Nombre, email, contraseña y teléfono son requeridos.' }); // 
     }
     
 
@@ -34,7 +34,8 @@ exports.createUser = async (req, res) => {
     const userResponse = newUser.toJSON();
     delete userResponse.password; 
     res.status(201).json(userResponse);
-  } catch (error) {
+  } 
+  catch (error) {
     
     res.status(400).json({ message: error.message }); // 
   }
