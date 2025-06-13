@@ -1,5 +1,8 @@
 const { Bovino, Raza, User, ValorCaracteristica, CaracteristicaGenetica, HistorialReproduccion } = require('../models');
 const { Op } = require('sequelize'); 
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 exports.getAllBovinos = async (req, res) => {
   try {
@@ -66,9 +69,9 @@ exports.getBovinoById = async (req, res) => {
         { model: Raza, as: 'raza' },
         { model: User, as: 'propietario', attributes: { exclude: ['password'] } },
         { model: ValorCaracteristica, as: 'valoresDeCaracteristicas',
-          include: { model: CaracteristicaGenetica }
+          include: { model: CaracteristicaGenetica, as: 'caracteristicaAsociada' }
         },
-        { model: HistorialReproduccion, as: 'historialReproductivo', as: 'caracteristicaAsociada' }
+        { model: HistorialReproduccion, as: 'historialReproductivo' }
       ],
     });
     if (!bovino) {
@@ -94,6 +97,10 @@ exports.updateBovino = async (req, res) => {
       include: [
         { model: Raza, as: 'raza' },
         { model: User, as: 'propietario', attributes: { exclude: ['password'] } },
+        { model: ValorCaracteristica, as: 'valoresDeCaracteristicas', 
+          include: { model: CaracteristicaGenetica, as: 'caracteristicaAsociada' }
+        },
+        { model: HistorialReproduccion, as: 'historialReproductivo' }
       ],
     });
     res.status(200).json(updatedBovino); 
