@@ -43,6 +43,10 @@ const Bovino = sequelize.define('Bovino', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  imagenUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   tableName: 'bovinos',
   timestamps: true,

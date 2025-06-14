@@ -17,10 +17,13 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const path = require('path');
 
 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/bovinos', bovinoRoutes);
@@ -37,10 +40,10 @@ app.use((req, res, next) => {
 
 syncDatabase().then(() => {
   app.listen(PORT, (error) => {
-    if (!error) { // 
-    console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
-    console.log(`Base de datos SQLite en: ${process.env.DB_STORAGE}`);
-
+    if (!error) {
+      console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
+      console.log(`Base de datos SQLite en: ${process.env.DB_STORAGE}`);
+      console.log(`Archivos estáticos servidos desde: ${path.join(__dirname, '..', 'public')}`);
     } else {
       console.log("Error al iniciar el servidor:", error);
     }
